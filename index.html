@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ayesha 💖</title>
+  <style>
+    body {
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+      max-width: 90%;
+    }
+
+    h1 {
+      color: #ff3366;
+    }
+
+    .buttons {
+      margin-top: 25px;
+    }
+
+    button {
+      padding: 14px 28px;
+      font-size: 18px;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      margin: 10px;
+      transition: transform 0.2s ease;
+    }
+
+    #yesBtn {
+      background: #ff3366;
+      color: white;
+    }
+
+    #yesBtn:hover {
+      transform: scale(1.1);
+    }
+
+    #noBtn {
+      background: #e0e0e0;
+      position: relative;
+    }
+
+    #message, #gift {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #444;
+    }
+
+    .heart {
+      position: fixed;
+      font-size: 24px;
+      animation: floatUp 3s linear forwards;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-200px); opacity: 0; }
+    }
+
+    a {
+      color: #ff3366;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <h1 id="question">Ayesha, will you be my Valentine, meri jaan? 💕</h1>
+
+    <div class="buttons">
+      <button id="yesBtn">Yes 💖</button>
+      <button id="noBtn">No 🙃</button>
+    </div>
+
+    <p id="message"></p>
+    <p id="gift" style="display:none;">
+      PS: I planted an olive tree in Palestine 🌿 in your name!<br>
+      Check your certificate here: 
+      <a href="https://www.pdffiller.com/s/CZAbrGfjiz" target="_blank">View Certificate</a>
+    </p>
+  </div>
+
+  <!-- Main background music (hidden) -->
+  <iframe
+    id="ytPlayer"
+    width="0"
+    height="0"
+    src="https://www.youtube.com/embed/8Q5kzE8Zy7A?enablejsapi=1&autoplay=1&mute=1"
+    frameborder="0"
+    allow="autoplay">
+  </iframe>
+
+  <!-- Romantic song from 1:14 -->
+  <iframe
+    id="songPlayer"
+    width="0"
+    height="0"
+    src="https://www.youtube.com/embed/HFHl_tXSyaE?start=74&enablejsapi=1&autoplay=1&mute=1"
+    frameborder="0"
+    allow="autoplay">
+  </iframe>
+
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const message = document.getElementById("message");
+    const gift = document.getElementById("gift");
+    const question = document.getElementById("question");
+
+    const noMessages = [
+      "Ayesha please na koiro 🥺",
+      "Hey… eto taratari no bolo na 😔",
+      "Just think once, meri jaan 💭💞",
+      "Mon ta ektu hurt hoye gelo 💔",
+      "Ayeshaaa 😭 ekbar yes bolo na",
+      "You’re too cute to say no, meri jaan 🥹",
+      "Ami ektu shy hoye gesi 🙈",
+      "Please meri jaan, last chance 😤💘",
+      "No button ta honestly sirf dikhane ke liye 😏"
+    ];
+
+    let noCount = 0;
+    let player, songPlayer;
+
+    // Function to dodge No button
+    const dodgeNo = () => {
+      const x = Math.random() * (window.innerWidth - 120);
+      const y = Math.random() * (window.innerHeight - 120);
+      noBtn.style.position = "absolute";
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+
+      message.textContent = noMessages[Math.min(noCount, noMessages.length - 1)];
+      noCount++;
+      yesBtn.style.transform = `scale(${1 + noCount * 0.05})`;
+    };
+
+    noBtn.addEventListener("mouseover", dodgeNo);
+    noBtn.addEventListener("touchstart", dodgeNo);
+
+    yesBtn.addEventListener("click", () => {
+      question.textContent = "YAYYY AYESHA 💖🥰";
+      message.innerHTML =
+        "I knew it 💞 meri jaan 😌<br>" +
+        "So… you’re officially my Valentine now 🌹✨";
+
+      noBtn.style.display = "none";
+      createHearts();
+
+      // Play main background music
+      if (player) {
+        player.unMute();
+        player.playVideo();
+      }
+
+      // Show olive tree gift + PDF link
+      gift.style.display = "block";
+
+      // Play romantic song from 1:14
+      if (songPlayer) {
+        songPlayer.unMute();
+        songPlayer.playVideo();
+      }
+    });
+
+    // Hearts animation
+    function createHearts() {
+      const icons = ["💗","💖","🌸","✨"];
+      const interval = setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = icons[Math.floor(Math.random() * icons.length)];
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.top = "100vh";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
+      }, 200);
+      setTimeout(() => clearInterval(interval), 4000);
+    }
+
+    // Load YouTube API
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('ytPlayer');
+      songPlayer = new YT.Player('songPlayer');
+    }
+  </script>
+
+</body>
+</html>
